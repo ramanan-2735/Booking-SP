@@ -1,0 +1,8 @@
+{
+  "name": "Client Session & Booking Manager",
+  "description": "Mobile-first client session tracking, purchase hours, and booking management app with Google Sheets & Google Calendar sync and dark theme.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
