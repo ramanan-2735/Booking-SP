@@ -49,11 +49,13 @@ service cloud.firestore {
 }
 ```
 
-#### B. Enable Google Authentication:
+#### B. Enable Google Authentication (Optional - Only for Google Sheets & Calendar Sync):
 1. In the left menu, click **Build** $\rightarrow$ **Authentication**.
 2. Click **Get started**.
 3. Under **Sign-in method**, select **Google** $\rightarrow$ toggle **Enable**.
 4. Select your support email and click **Save**.
+
+*(Note: If your staff only manages bookings and client passes locally, you can skip this step!)*
 
 ---
 
