@@ -7,12 +7,9 @@ import {
   CalendarCheck,
   CalendarDays,
   Plus,
-  FileSpreadsheet,
-  LogOut,
-  UserCheck,
-  Sparkles,
+  Download,
 } from 'lucide-react';
-import { GoogleSignInButton } from '../common/GoogleSignInButton';
+import { exportAllDataToExcel } from '../../utils/excelExport';
 
 export const SidebarNav: React.FC = () => {
   const {
@@ -24,12 +21,7 @@ export const SidebarNav: React.FC = () => {
     openBookingModal,
     openClientModal,
     openPurchaseModal,
-    openSheetsModal,
-    openCalendarModal,
-    googleUser,
-    signOutGoogleAccount,
-    connectedSpreadsheetId,
-    lastCalendarSyncTime,
+    getClientStats,
   } = useApp();
 
   const tabs: { id: ActiveTab; label: string; icon: React.FC<{ className?: string }>; count: number }[] = [
@@ -68,7 +60,7 @@ export const SidebarNav: React.FC = () => {
         </div>
         <div>
           <h2 className="font-extrabold text-white text-base tracking-tight leading-tight">
-            Badminton SP
+            BSC Booking
           </h2>
           <p className="text-[11px] text-gray-400 font-medium">Court & Pass Manager</p>
         </div>
@@ -142,68 +134,23 @@ export const SidebarNav: React.FC = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 pt-1">
+        <div className="pt-1">
           <button
-            onClick={openSheetsModal}
-            className="py-2 px-2.5 rounded-xl bg-[#161a25] hover:bg-[#1f2535] border border-[#272e40] text-emerald-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+            onClick={() => exportAllDataToExcel(clients, purchases, bookings, getClientStats)}
+            className="w-full py-2.5 px-3.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm"
           >
-            <FileSpreadsheet className="w-3.5 h-3.5" />
-            <span>Sheets</span>
-            {connectedSpreadsheetId && (
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            )}
-          </button>
-
-          <button
-            onClick={openCalendarModal}
-            className="py-2 px-2.5 rounded-xl bg-[#161a25] hover:bg-[#1f2535] border border-[#272e40] text-amber-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
-          >
-            <CalendarDays className="w-3.5 h-3.5" />
-            <span>Calendar</span>
-            {lastCalendarSyncTime && (
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-            )}
+            <Download className="w-4 h-4 text-emerald-400" />
+            <span>Download Excel Report</span>
           </button>
         </div>
       </div>
 
-      {/* Footer / Account */}
+      {/* Footer / System Info */}
       <div className="mt-auto pt-4 border-t border-[#1c212e]">
-        {googleUser ? (
-          <div className="bg-[#151924] border border-[#23293b] rounded-xl p-3 space-y-2">
-            <div className="flex items-center gap-2.5">
-              {googleUser.photoURL ? (
-                <img
-                  src={googleUser.photoURL}
-                  alt={googleUser.displayName || 'Staff'}
-                  className="w-7 h-7 rounded-full border border-amber-400/40"
-                />
-              ) : (
-                <div className="w-7 h-7 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center font-bold text-xs">
-                  <UserCheck className="w-4 h-4" />
-                </div>
-              )}
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-white truncate">
-                  {googleUser.displayName || 'Complex Staff'}
-                </p>
-                <p className="text-[10px] text-gray-400 truncate">{googleUser.email}</p>
-              </div>
-            </div>
-            <button
-              onClick={signOutGoogleAccount}
-              className="w-full py-1.5 text-[11px] font-semibold text-rose-400 hover:bg-rose-950/30 rounded-lg flex items-center justify-center gap-1.5 transition-colors"
-            >
-              <LogOut className="w-3 h-3" />
-              <span>Sign Out</span>
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <p className="text-[11px] text-gray-400 text-center">Google Workspace</p>
-            <GoogleSignInButton label="Staff Sign In" />
-          </div>
-        )}
+        <div className="bg-[#151924] border border-[#23293b] rounded-xl p-3 text-center">
+          <p className="text-xs font-bold text-white">BSC Booking System</p>
+          <p className="text-[10px] text-emerald-400 font-medium mt-0.5">● Live Firestore Sync</p>
+        </div>
       </div>
     </aside>
   );

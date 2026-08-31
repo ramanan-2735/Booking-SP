@@ -102,16 +102,13 @@ Open your terminal (Command Prompt or PowerShell) inside your project directory 
 # 1. Install dependencies
 npm install
 
-# 2. Set your Firebase project ID
-npx firebase use --add
-
-# 3. Build the website
+# 2. Build the website
 npm run build
 
-# 4. Log into your Firebase account
+# 3. Log into your Firebase account
 npx firebase login
 
-# 5. Deploy your website live!
+# 4. Deploy your website live!
 npx firebase deploy
 ```
 

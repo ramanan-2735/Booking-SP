@@ -1,12 +1,15 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { Client } from '../../types';
-import { Trash2, Edit3, ChevronRight, User, Plus, Clock } from 'lucide-react';
+import { Trash2, Edit3, ChevronRight, User, Plus, Clock, Download } from 'lucide-react';
 import { motion } from 'motion/react';
+import { exportAllDataToExcel } from '../../utils/excelExport';
 
 export const ClientList: React.FC = () => {
   const {
     clients,
+    purchases,
+    bookings,
     searchQuery,
     setActiveView,
     openClientModal,
@@ -30,8 +33,15 @@ export const ClientList: React.FC = () => {
       {/* Header Info / Count Bar */}
       <div className="px-4 py-2.5 flex items-center justify-between text-xs text-gray-400 bg-[#151821]/60 border-b border-[#202533] gap-2">
         <span>Total Clients: <strong className="text-amber-400">{filteredClients.length}</strong></span>
-        <div className="flex items-center gap-3">
-          <span className="hidden sm:inline">Tap any client for full profile & history</span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => exportAllDataToExcel(clients, purchases, bookings, getClientStats)}
+            className="px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center gap-1.5 transition-colors"
+            title="Download Excel Report (.xlsx)"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Excel</span>
+          </button>
           <button
             onClick={() => openClientModal()}
             className="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold text-xs flex items-center gap-1.5 shadow-md transition-colors"

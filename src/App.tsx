@@ -88,8 +88,6 @@ const AppContent: React.FC = () => {
         <ClientFormModal />
         <PurchaseFormModal />
         <BookingFormModal />
-        <GoogleSheetsModal />
-        <GoogleCalendarModal />
         <ToastContainer />
       </div>
     </div>

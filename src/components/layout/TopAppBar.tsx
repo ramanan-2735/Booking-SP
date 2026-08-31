@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Menu, ArrowLeft, Search, RotateCw, X, FileSpreadsheet, CalendarDays } from 'lucide-react';
+import { Menu, ArrowLeft, Search, RotateCw, X, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { exportAllDataToExcel } from '../../utils/excelExport';
 
 export const TopAppBar: React.FC = () => {
   const {
@@ -13,11 +14,10 @@ export const TopAppBar: React.FC = () => {
     isSearchOpen,
     setIsSearchOpen,
     setIsDrawerOpen,
-    openSheetsModal,
-    openCalendarModal,
-    connectedSpreadsheetId,
-    lastCalendarSyncTime,
-    googleUser,
+    clients,
+    purchases,
+    bookings,
+    getClientStats,
     addToast,
   } = useApp();
 
@@ -116,34 +116,17 @@ export const TopAppBar: React.FC = () => {
           </div>
         )}
 
-        {/* Right Action Icons: Calendar Sync, Sheets Sync, Search & Refresh */}
+        {/* Right Action Icons: Export Excel, Search & Refresh */}
         <div className="flex items-center gap-1">
-          {/* Google Calendar button */}
+          {/* Export Excel button */}
           <button
-            id="top-calendar-sync-btn"
-            onClick={openCalendarModal}
-            className="relative w-10 h-10 rounded-xl flex items-center justify-center text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 active:scale-95 transition-all border border-amber-400/20"
-            aria-label="Google Calendar Sync"
-            title="Google Calendar Sync"
+            id="top-excel-export-btn"
+            onClick={() => exportAllDataToExcel(clients, purchases, bookings, getClientStats)}
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 active:scale-95 transition-all border border-emerald-500/20"
+            aria-label="Download Excel Report"
+            title="Download Excel Report (.xlsx)"
           >
-            <CalendarDays className="w-5 h-5" />
-            {lastCalendarSyncTime && (
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-400 ring-2 ring-[#12151d]" />
-            )}
-          </button>
-
-          {/* Google Sheets button */}
-          <button
-            id="top-sheets-btn"
-            onClick={openSheetsModal}
-            className="relative w-10 h-10 rounded-xl flex items-center justify-center text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 active:scale-95 transition-all border border-emerald-500/20"
-            aria-label="Google Sheets Sync"
-            title="Google Sheets Sync"
-          >
-            <FileSpreadsheet className="w-5 h-5" />
-            {connectedSpreadsheetId && (
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#12151d]" />
-            )}
+            <Download className="w-5 h-5" />
           </button>
 
           <button

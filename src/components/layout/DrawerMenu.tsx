@@ -11,10 +11,9 @@ import {
   ShoppingBag,
   ShieldCheck,
   HelpCircle,
-  FileSpreadsheet,
-  CalendarDays,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { exportAllDataToExcel } from '../../utils/excelExport';
 
 export const DrawerMenu: React.FC = () => {
   const {
@@ -23,11 +22,7 @@ export const DrawerMenu: React.FC = () => {
     clients,
     purchases,
     bookings,
-    googleUser,
-    connectedSpreadsheetName,
-    selectedCalendarName,
-    openSheetsModal,
-    openCalendarModal,
+    getClientStats,
     resetToSampleData,
     exportDataJSON,
     importDataJSON,
@@ -83,11 +78,11 @@ export const DrawerMenu: React.FC = () => {
               <div className="p-5 border-b border-[#232838] flex items-center justify-between bg-[#161a25]">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-400/30 flex items-center justify-center text-amber-400 font-black text-lg">
-                    CS
+                    BSC
                   </div>
                   <div>
-                    <h2 className="font-bold text-white text-base leading-tight">Session Manager</h2>
-                    <p className="text-xs text-amber-400 font-medium">Mobile Pro Edition</p>
+                    <h2 className="font-bold text-white text-base leading-tight">BSC Booking</h2>
+                    <p className="text-xs text-amber-400 font-medium">Court & Pass Manager</p>
                   </div>
                 </div>
                 <button
@@ -135,70 +130,38 @@ export const DrawerMenu: React.FC = () => {
                 </div>
               </div>
 
-              {/* Google Workspace Integrations */}
-              <div className="px-5 py-2 space-y-2">
+              {/* Excel Export & Data Actions */}
+              <div className="px-5 py-2 space-y-3">
                 <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Google Workspace
+                  Data Reports & Backup
                 </p>
 
-                {/* Google Calendar */}
+                {/* Download Excel Button */}
                 <button
                   onClick={() => {
                     setIsDrawerOpen(false);
-                    openCalendarModal();
+                    exportAllDataToExcel(clients, purchases, bookings, getClientStats);
                   }}
-                  className="w-full flex items-center justify-between p-3 rounded-xl bg-[#1a1b24] hover:bg-[#232532] border border-amber-500/30 text-left transition-colors group cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-amber-400/20 text-amber-400 flex items-center justify-center border border-amber-400/30">
-                      <CalendarDays className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-white group-hover:text-amber-300 transition-colors">
-                        Google Calendar
-                      </p>
-                      <p className="text-[11px] text-gray-400 truncate max-w-[140px]">
-                        {selectedCalendarName || 'Primary Calendar'}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded-md font-bold bg-amber-400/20 text-amber-400 border border-amber-400/30">
-                    {googleUser ? 'Sync' : 'Connect'}
-                  </span>
-                </button>
-
-                {/* Google Sheets */}
-                <button
-                  onClick={() => {
-                    setIsDrawerOpen(false);
-                    openSheetsModal();
-                  }}
-                  className="w-full flex items-center justify-between p-3 rounded-xl bg-[#171e29] hover:bg-[#1f2838] border border-emerald-500/30 text-left transition-colors group cursor-pointer"
+                  className="w-full flex items-center justify-between p-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-left transition-all group cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
-                      <FileSpreadsheet className="w-4 h-4" />
+                      <Download className="w-4 h-4" />
                     </div>
                     <div>
                       <p className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">
-                        Google Sheets
+                        Export Excel (.xlsx)
                       </p>
-                      <p className="text-[11px] text-gray-400 truncate max-w-[140px]">
-                        {connectedSpreadsheetName || 'Not connected'}
+                      <p className="text-[11px] text-gray-400">
+                        Clients, Passes & Bookings
                       </p>
                     </div>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-md font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                    {googleUser ? 'Linked' : 'Sign in'}
+                    Download
                   </span>
                 </button>
-              </div>
 
-              {/* Data Actions */}
-              <div className="px-5 py-2">
-                <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
-                  Data & Backup
-                </p>
                 <div className="space-y-1.5">
                   <button
                     onClick={exportDataJSON}
