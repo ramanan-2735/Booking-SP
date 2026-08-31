@@ -21,6 +21,23 @@ export interface SessionPurchase {
   createdAt: string;
 }
 
+export interface Court {
+  id: string;
+  name: string;
+  number: number;
+  isActive: boolean;
+  createdAt?: string;
+}
+
+export const DEFAULT_COURTS: Court[] = [
+  { id: 'court-1', name: 'Court 1', number: 1, isActive: true },
+  { id: 'court-2', name: 'Court 2', number: 2, isActive: true },
+  { id: 'court-3', name: 'Court 3', number: 3, isActive: true },
+  { id: 'court-4', name: 'Court 4', number: 4, isActive: true },
+  { id: 'court-5', name: 'Court 5', number: 5, isActive: true },
+  { id: 'court-6', name: 'Court 6', number: 6, isActive: true },
+];
+
 export type BookingStatus = 'Scheduled' | 'Completed' | 'In Progress' | 'Cancelled';
 
 export interface Booking {
@@ -28,9 +45,13 @@ export interface Booking {
   clientId: string; // e.g. "CLI0001"
   clientName: string;
   purchaseId?: string; // linked purchase if specific, or general balance
-  startDate: string; // e.g. "2026-07-13" or formatted
+  courtId: string; // e.g. "court-1"
+  courtName?: string; // cached name e.g. "Court 1"
+  startDate: string; // e.g. "2026-07-13"
   startTime: string; // e.g. "09:00 AM" or "09:00"
-  durationHours: number; // slots used (e.g. 4, 8, 10, 1)
+  durationHours: number; // slots used (e.g. 1, 2, 4)
+  startAt?: string; // ISO string calculated for collision checking
+  endAt?: string; // ISO string calculated for collision checking
   status: BookingStatus;
   notes?: string;
   googleEventId?: string;

@@ -22,6 +22,8 @@ export const BookingFormModal: React.FC = () => {
     closeBookingModal,
     clients,
     purchases,
+    bookings,
+    courts,
     addBooking,
     updateBooking,
     getClientStats,
@@ -32,6 +34,7 @@ export const BookingFormModal: React.FC = () => {
 
   const [clientId, setClientId] = useState('');
   const [purchaseId, setPurchaseId] = useState('');
+  const [courtId, setCourtId] = useState('court-1');
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('09:00 AM');
   const [durationHours, setDurationHours] = useState<number | ''>(4);
@@ -40,10 +43,13 @@ export const BookingFormModal: React.FC = () => {
   const [syncToCalendar, setSyncToCalendar] = useState(false);
   const [error, setError] = useState('');
 
+  const activeCourts = courts.length > 0 ? courts.filter((c) => c.isActive) : [];
+
   useEffect(() => {
     if (editingBooking) {
       setClientId(editingBooking.clientId);
       setPurchaseId(editingBooking.purchaseId || '');
+      setCourtId(editingBooking.courtId || (activeCourts[0] ? activeCourts[0].id : 'court-1'));
       setStartDate(editingBooking.startDate);
       setStartTime(editingBooking.startTime);
       setDurationHours(editingBooking.durationHours);
@@ -53,6 +59,7 @@ export const BookingFormModal: React.FC = () => {
     } else {
       setClientId(defaultBookingClientId || (clients[0] ? clients[0].id : ''));
       setPurchaseId(defaultBookingPurchaseId || '');
+      setCourtId(activeCourts[0] ? activeCourts[0].id : 'court-1');
       setStartDate(new Date().toISOString().slice(0, 10));
       setStartTime('09:00 AM');
       setDurationHours(4);
@@ -105,12 +112,17 @@ export const BookingFormModal: React.FC = () => {
 
     const duration = Number(durationHours);
 
+    const selectedCourt = courts.find((c) => c.id === courtId);
+    const courtName = selectedCourt ? selectedCourt.name : 'Court 1';
+
     if (editingBooking) {
-      const res = updateBooking({
+      const res = await updateBooking({
         ...editingBooking,
         clientId,
         clientName: selectedClient ? selectedClient.name : editingBooking.clientName,
         purchaseId: purchaseId || undefined,
+        courtId,
+        courtName,
         startDate,
         startTime,
         durationHours: duration,
@@ -125,10 +137,12 @@ export const BookingFormModal: React.FC = () => {
         syncBookingToGoogleCalendar(editingBooking.id);
       }
     } else {
-      const res = addBooking({
+      const res = await addBooking({
         clientId,
         clientName: selectedClient ? selectedClient.name : 'Unknown',
         purchaseId: purchaseId || undefined,
+        courtId,
+        courtName,
         startDate,
         startTime,
         durationHours: duration,
@@ -234,6 +248,27 @@ export const BookingFormModal: React.FC = () => {
                       </option>
                     );
                   })}
+                </select>
+              </div>
+            </div>
+
+            {/* Court Selector */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                Badminton Court <span className="text-amber-400">*</span>
+              </label>
+              <div className="relative">
+                <select
+                  value={courtId}
+                  onChange={(e) => setCourtId(e.target.value)}
+                  required
+                  className="w-full bg-[#11141c] border border-[#272e40] focus:border-amber-400 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none transition-colors appearance-none cursor-pointer font-bold"
+                >
+                  {activeCourts.map((court) => (
+                    <option key={court.id} value={court.id}>
+                      {court.name} (Court #{court.number})
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

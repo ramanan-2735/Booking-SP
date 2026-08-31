@@ -28,9 +28,18 @@ export const ClientList: React.FC = () => {
   return (
     <div className="pb-28">
       {/* Header Info / Count Bar */}
-      <div className="px-4 py-2.5 flex items-center justify-between text-xs text-gray-400 bg-[#151821]/60 border-b border-[#202533]">
+      <div className="px-4 py-2.5 flex items-center justify-between text-xs text-gray-400 bg-[#151821]/60 border-b border-[#202533] gap-2">
         <span>Total Clients: <strong className="text-amber-400">{filteredClients.length}</strong></span>
-        <span>Tap any client for full profile & history</span>
+        <div className="flex items-center gap-3">
+          <span className="hidden sm:inline">Tap any client for full profile & history</span>
+          <button
+            onClick={() => openClientModal()}
+            className="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-gray-950 font-bold text-xs flex items-center gap-1.5 shadow-md transition-colors"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add Client</span>
+          </button>
+        </div>
       </div>
 
       {/* Client List */}
@@ -54,7 +63,7 @@ export const ClientList: React.FC = () => {
           </button>
         </div>
       ) : (
-        <div className="divide-y divide-[#202533]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredClients.map((client) => {
             const stats = getClientStats(client.id);
             const remainingHours = stats ? stats.hoursRemaining : 0;
@@ -66,7 +75,7 @@ export const ClientList: React.FC = () => {
                 key={client.id}
                 id={`client-row-${client.id}`}
                 layout
-                className="group px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-[#181d28]/70 active:bg-[#1b212e] transition-colors cursor-pointer"
+                className="group p-4 bg-[#161a25] border border-[#232838] hover:border-amber-400/50 rounded-2xl flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm"
                 onClick={() => setActiveView({ type: 'client-detail', clientId: client.id })}
               >
                 {/* Left: Name & ID */}

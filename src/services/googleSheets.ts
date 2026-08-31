@@ -387,6 +387,8 @@ export async function importDataFromSpreadsheet(
       clientId: String(row[1] || '').trim(),
       clientName: String(row[2] || '').trim(),
       purchaseId: row[3] ? String(row[3]).trim() : undefined,
+      courtId: 'court-1',
+      courtName: 'Court 1',
       startDate: String(row[4] || new Date().toISOString().slice(0, 10)).trim(),
       startTime: String(row[5] || '09:00 AM').trim(),
       durationHours: Number(row[6]) || 0,

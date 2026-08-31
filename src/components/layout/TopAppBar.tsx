@@ -52,7 +52,7 @@ export const TopAppBar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-30 bg-[#12151d] border-b border-[#212634] shadow-md select-none">
-      <div className="max-w-3xl mx-auto px-4 h-15 flex items-center justify-between gap-2">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 h-15 flex items-center justify-between gap-2">
         {/* Left: Back Arrow or Hamburger Menu */}
         <div className="flex items-center gap-2.5">
           {isDetailView ? (
@@ -68,7 +68,7 @@ export const TopAppBar: React.FC = () => {
             <button
               id="top-menu-btn"
               onClick={() => setIsDrawerOpen(true)}
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-white hover:bg-gray-800/80 active:scale-95 transition-all"
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-gray-300 hover:text-white hover:bg-gray-800/80 active:scale-95 transition-all md:hidden"
               aria-label="Open menu"
             >
               <Menu className="w-6 h-6" />

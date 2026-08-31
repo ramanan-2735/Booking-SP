@@ -106,13 +106,13 @@ export const BookingList: React.FC = () => {
           </button>
         </div>
       ) : (
-        <div className="divide-y divide-[#202533]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredBookings.map((booking) => (
             <motion.div
               key={booking.id}
               id={`booking-row-${booking.id}`}
               layout
-              className="group px-4 py-3.5 flex items-center justify-between gap-3 hover:bg-[#181d28]/70 active:bg-[#1b212e] transition-colors cursor-pointer"
+              className="group p-4 bg-[#161a25] border border-[#232838] hover:border-amber-400/50 rounded-2xl flex items-center justify-between gap-3 transition-all cursor-pointer shadow-sm"
               onClick={() => setActiveView({ type: 'booking-detail', bookingId: booking.id })}
             >
               {/* Left: Client name & Booking ID */}
@@ -123,6 +123,9 @@ export const BookingList: React.FC = () => {
                   </h3>
                   <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#222736] text-emerald-400 border border-emerald-500/20">
                     {booking.id}
+                  </span>
+                  <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#1e2433] text-amber-300 border border-amber-500/30">
+                    {booking.courtName || 'Court 1'}
                   </span>
                 </div>
 

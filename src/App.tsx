@@ -27,6 +27,8 @@ import { GoogleSheetsModal } from './components/sheets/GoogleSheetsModal';
 import { CalendarView } from './components/calendar/CalendarView';
 import { GoogleCalendarModal } from './components/calendar/GoogleCalendarModal';
 
+import { SidebarNav } from './components/layout/SidebarNav';
+
 const AppContent: React.FC = () => {
   const { activeTab, activeView } = useApp();
 
@@ -58,21 +60,26 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d0f15] flex justify-center text-gray-100 font-sans">
-      {/* Mobile-first app container with max-w constraint for desktop viewing */}
-      <div className="w-full max-w-lg min-h-screen bg-[#11131b] flex flex-col shadow-2xl relative border-x border-[#1c212e]">
+    <div className="min-h-screen bg-[#0d0f15] text-gray-100 font-sans flex">
+      {/* Persistent Sidebar Navigation for Tablet & Desktop (md+) */}
+      <SidebarNav />
+
+      {/* Main Responsive Application View */}
+      <div className="flex-1 min-h-screen bg-[#11131b] flex flex-col relative">
         {/* Top App Bar */}
         <TopAppBar />
 
-        {/* Dynamic Main Content */}
-        <main className="flex-1 overflow-y-auto">
+        {/* Dynamic Main Content Container */}
+        <main className="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 overflow-y-auto">
           {renderMainView()}
         </main>
 
-        {/* Floating Action Button */}
-        <FAB />
+        {/* Floating Action Button (Mobile) */}
+        <div className="md:hidden">
+          <FAB />
+        </div>
 
-        {/* Fixed Bottom Navigation */}
+        {/* Fixed Bottom Navigation (Mobile) */}
         <BottomNav />
 
         {/* Drawers and Modals */}

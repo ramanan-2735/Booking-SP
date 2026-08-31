@@ -37,7 +37,7 @@ export const BottomNav: React.FC = () => {
   return (
     <nav
       id="bottom-navigation-bar"
-      className="fixed bottom-0 left-0 right-0 z-30 bg-[#12151e]/95 backdrop-blur-md border-t border-[#222736] shadow-2xl safe-area-pb"
+      className="fixed bottom-0 left-0 right-0 z-30 bg-[#12151e]/95 backdrop-blur-md border-t border-[#222736] shadow-2xl safe-area-pb md:hidden"
     >
       <div className="max-w-lg mx-auto grid grid-cols-4 h-16 items-center px-1">
         {tabs.map((tab) => {

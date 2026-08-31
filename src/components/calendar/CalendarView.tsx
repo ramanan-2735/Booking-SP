@@ -257,7 +257,7 @@ export const CalendarView: React.FC = () => {
             </button>
           </div>
         ) : (
-          <div className="space-y-2.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {dayBookings.map((b) => {
               const isSyncing = syncingBookingId === b.id || isCalendarSyncing;
               return (
@@ -273,6 +273,9 @@ export const CalendarView: React.FC = () => {
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-[#212738] text-emerald-400 border border-emerald-500/20">
                         {b.id}
+                      </span>
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-md bg-[#1e2433] text-amber-300 border border-amber-500/30">
+                        {b.courtName || 'Court 1'}
                       </span>
                       <h4 className="text-sm sm:text-base font-bold text-white truncate">
                         {b.clientName}
