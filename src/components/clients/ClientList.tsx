@@ -99,7 +99,7 @@ export const ClientList: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3 text-xs text-gray-400">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-400">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3 text-gray-400" />
                       <span>Remaining:</span>
@@ -116,7 +116,12 @@ export const ClientList: React.FC = () => {
                       </span>
                     </span>
                     {stats && (
-                      <span className="hidden sm:inline text-gray-400">
+                      <span className="flex items-center gap-1 font-semibold text-emerald-400/90">
+                        • <span>Paid: ₹{stats.totalAmountPaid.toLocaleString('en-IN')}</span>
+                      </span>
+                    )}
+                    {stats && (
+                      <span className="hidden sm:inline text-gray-500">
                         • {stats.bookingCount} bookings
                       </span>
                     )}

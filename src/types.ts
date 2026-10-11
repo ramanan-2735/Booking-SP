@@ -94,6 +94,9 @@ export interface ClientStats {
   totalHoursPurchased: number;
   totalSlotsUsed: number;
   hoursRemaining: number;
+  totalSlotsUsedPaid: number;
+  totalAmountPaid: number;
+  totalAmountDue?: number;
   firstBookingDate: string;
   purchaseCount: number;
   bookingCount: number;

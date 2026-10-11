@@ -128,6 +128,24 @@ export const DrawerMenu: React.FC = () => {
                     <p className="text-lg font-bold text-amber-400">{totalRemainingHours} hrs</p>
                   </div>
                 </div>
+
+                {/* Total Revenue Box */}
+                {(() => {
+                  const totalRev = clients.reduce((acc, c) => {
+                    const st = getClientStats(c.id);
+                    return acc + (st ? st.totalAmountPaid : 0);
+                  }, 0);
+
+                  return (
+                    <div className="mt-2.5 bg-gradient-to-r from-[#14201c] to-[#121920] border border-emerald-500/30 p-3 rounded-xl flex items-center justify-between">
+                      <div>
+                        <p className="text-[11px] font-bold uppercase text-emerald-400">Paid For Used Slots</p>
+                        <p className="text-lg font-black text-emerald-300">₹{totalRev.toLocaleString('en-IN')}</p>
+                      </div>
+                      <span className="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center font-bold text-emerald-400 text-sm">₹</span>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Excel Export & Data Actions */}

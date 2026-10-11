@@ -145,6 +145,29 @@ export const SidebarNav: React.FC = () => {
         </div>
       </div>
 
+      {/* Revenue & Total Paid Summary */}
+      {(() => {
+        const totalRevenue = clients.reduce((acc, c) => {
+          const st = getClientStats(c.id);
+          return acc + (st ? st.totalAmountPaid : 0);
+        }, 0);
+
+        return (
+          <div className="mb-4 bg-gradient-to-br from-[#141e1c] to-[#11161d] border border-emerald-500/25 rounded-2xl p-3.5 shadow-xs">
+            <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-emerald-400 mb-1">
+              <span>Paid For Used Slots</span>
+              <span className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center text-[10px] text-emerald-300">₹</span>
+            </div>
+            <p className="text-xl font-black text-emerald-400">
+              ₹{totalRevenue.toLocaleString('en-IN')}
+            </p>
+            <p className="text-[10px] text-gray-400 mt-0.5">
+              Across all {clients.length} clients
+            </p>
+          </div>
+        );
+      })()}
+
       {/* Footer / System Info */}
       <div className="mt-auto pt-4 border-t border-[#1c212e]">
         <div className="bg-[#151924] border border-[#23293b] rounded-xl p-3 text-center">

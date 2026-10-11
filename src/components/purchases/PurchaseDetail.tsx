@@ -135,7 +135,7 @@ export const PurchaseDetail: React.FC<{ purchaseId: string }> = ({ purchaseId })
         <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2.5 px-1">
           Package Allocation
         </h3>
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
           {/* Hours Purchased */}
           <div className="bg-[#151924] border border-[#242a3c] rounded-2xl p-3.5 sm:p-4">
             <span className="text-xs text-gray-400 font-medium">Purchased</span>
@@ -177,6 +177,30 @@ export const PurchaseDetail: React.FC<{ purchaseId: string }> = ({ purchaseId })
             </p>
             <p className="text-[11px] font-semibold opacity-80">Hours Left</p>
           </div>
+
+          {/* Total Amount Paid for Used Slots */}
+          {(() => {
+            const unitRate = purchase.ratePerHour ?? (purchase.totalAmount && purchase.hoursPurchased ? purchase.totalAmount / purchase.hoursPurchased : 0);
+            const paidForUsed = slotsUsed * unitRate;
+            const totalPkgVal = purchase.totalAmount ?? (unitRate * purchase.hoursPurchased);
+
+            return (
+              <div className="bg-gradient-to-br from-[#162220] to-[#131b19] border border-emerald-500/30 rounded-2xl p-3.5 sm:p-4">
+                <div className="flex items-center justify-between text-xs text-emerald-400 mb-1">
+                  <span className="font-bold">Paid (Used Slots)</span>
+                  <span className="text-[10px] px-1.5 py-0.2 rounded font-bold bg-emerald-500/20 text-emerald-300">
+                    {slotsUsed > 0 ? 'Active' : 'Unused'}
+                  </span>
+                </div>
+                <p className="text-xl sm:text-2xl font-black text-emerald-400 mt-1">
+                  ₹{paidForUsed.toLocaleString('en-IN')}
+                </p>
+                <p className="text-[11px] text-emerald-500/80 font-medium">
+                  {totalPkgVal > 0 ? `of ₹${totalPkgVal.toLocaleString('en-IN')} package` : `${slotsUsed} hrs billed`}
+                </p>
+              </div>
+            );
+          })()}
         </div>
       </div>
 

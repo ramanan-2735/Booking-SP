@@ -19,6 +19,8 @@ export const PurchaseFormModal: React.FC = () => {
   const [purchaseDate, setPurchaseDate] = useState('');
   const [hoursPurchased, setHoursPurchased] = useState<number | ''>(20);
   const [ratePerHour, setRatePerHour] = useState<number | ''>('');
+  const [totalAmount, setTotalAmount] = useState<number | ''>('');
+  const [paymentStatus, setPaymentStatus] = useState<'Paid' | 'Pending' | 'Partial'>('Paid');
   const [notes, setNotes] = useState('');
   const [error, setError] = useState('');
 
@@ -28,12 +30,16 @@ export const PurchaseFormModal: React.FC = () => {
       setPurchaseDate(editingPurchase.purchaseDate);
       setHoursPurchased(editingPurchase.hoursPurchased);
       setRatePerHour(editingPurchase.ratePerHour || '');
+      setTotalAmount(editingPurchase.totalAmount ?? (editingPurchase.ratePerHour && editingPurchase.hoursPurchased ? editingPurchase.ratePerHour * editingPurchase.hoursPurchased : ''));
+      setPaymentStatus(editingPurchase.paymentStatus || 'Paid');
       setNotes(editingPurchase.notes || '');
     } else {
       setClientId(defaultPurchaseClientId || (clients[0] ? clients[0].id : ''));
       setPurchaseDate(new Date().toISOString().slice(0, 10));
       setHoursPurchased(20);
       setRatePerHour('');
+      setTotalAmount('');
+      setPaymentStatus('Paid');
       setNotes('');
     }
     setError('');
@@ -63,7 +69,9 @@ export const PurchaseFormModal: React.FC = () => {
 
     const hours = Number(hoursPurchased);
     const rate = ratePerHour ? Number(ratePerHour) : undefined;
-    const totalAmount = rate ? rate * hours : undefined;
+    const finalAmount = totalAmount !== '' 
+      ? Number(totalAmount) 
+      : (rate ? rate * hours : undefined);
 
     if (editingPurchase) {
       updatePurchase({
@@ -73,7 +81,8 @@ export const PurchaseFormModal: React.FC = () => {
         purchaseDate,
         hoursPurchased: hours,
         ratePerHour: rate,
-        totalAmount,
+        totalAmount: finalAmount,
+        paymentStatus,
         notes: notes.trim() || undefined,
       });
     } else {
@@ -83,7 +92,8 @@ export const PurchaseFormModal: React.FC = () => {
         purchaseDate,
         hoursPurchased: hours,
         ratePerHour: rate,
-        totalAmount,
+        totalAmount: finalAmount,
+        paymentStatus,
         notes: notes.trim() || undefined,
       });
     }
@@ -225,28 +235,76 @@ export const PurchaseFormModal: React.FC = () => {
               </div>
             </div>
 
-            {/* Rate & Optional notes */}
+            {/* Financial Details: Rate & Total Amount */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Rate Per Hour (₹)
+                </label>
+                <div className="relative">
+                  <span className="text-gray-500 text-sm font-bold absolute left-3.5 top-1/2 -translate-y-1/2">₹</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="50"
+                    placeholder="e.g. 1500"
+                    value={ratePerHour}
+                    onChange={(e) => {
+                      const val = e.target.value === '' ? '' : Number(e.target.value);
+                      setRatePerHour(val);
+                      if (val !== '' && hoursPurchased) {
+                        setTotalAmount(val * Number(hoursPurchased));
+                      }
+                    }}
+                    className="w-full bg-[#11141c] border border-[#272e40] focus:border-amber-400 rounded-xl pl-9 pr-3 py-2.5 text-sm text-white focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
+                  Total Amount (₹)
+                </label>
+                <div className="relative">
+                  <span className="text-emerald-400 text-sm font-bold absolute left-3.5 top-1/2 -translate-y-1/2">₹</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="100"
+                    placeholder="e.g. 30000"
+                    value={totalAmount}
+                    onChange={(e) => setTotalAmount(e.target.value === '' ? '' : Number(e.target.value))}
+                    className="w-full bg-[#11141c] border border-[#272e40] focus:border-emerald-400 rounded-xl pl-9 pr-3 py-2.5 text-sm text-white focus:outline-none transition-colors font-semibold"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Status */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-1.5">
-                Rate Per Hour (Optional)
+                Payment Status
               </label>
-              <div className="relative">
-                <span className="text-gray-500 text-sm font-bold absolute left-3.5 top-1/2 -translate-y-1/2">₹</span>
-                <input
-                  type="number"
-                  min="0"
-                  step="50"
-                  placeholder="e.g. 1500"
-                  value={ratePerHour}
-                  onChange={(e) => setRatePerHour(e.target.value === '' ? '' : Number(e.target.value))}
-                  className="w-full bg-[#11141c] border border-[#272e40] focus:border-amber-400 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white focus:outline-none transition-colors"
-                />
+              <div className="grid grid-cols-3 gap-2">
+                {(['Paid', 'Pending', 'Partial'] as const).map((st) => (
+                  <button
+                    key={st}
+                    type="button"
+                    onClick={() => setPaymentStatus(st)}
+                    className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
+                      paymentStatus === st
+                        ? st === 'Paid'
+                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+                          : st === 'Pending'
+                          ? 'bg-amber-500/20 text-amber-400 border-amber-500'
+                          : 'bg-blue-500/20 text-blue-400 border-blue-500'
+                        : 'bg-[#12151e] text-gray-400 border-[#272e40] hover:border-gray-600'
+                    }`}
+                  >
+                    {st === 'Paid' ? '✓ Paid' : st === 'Pending' ? '⌛ Pending' : '⚡ Partial'}
+                  </button>
+                ))}
               </div>
-              {ratePerHour && hoursPurchased && (
-                <p className="text-[11px] text-amber-400/90 mt-1 font-semibold">
-                  Total Package Cost: ₹{(Number(ratePerHour) * Number(hoursPurchased)).toLocaleString()}
-                </p>
-              )}
             </div>
 
             {/* Notes */}

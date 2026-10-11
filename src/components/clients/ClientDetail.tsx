@@ -50,6 +50,8 @@ export const ClientDetail: React.FC<{ clientId: string }> = ({ clientId }) => {
     totalHoursPurchased,
     totalSlotsUsed,
     hoursRemaining,
+    totalAmountPaid,
+    totalAmountDue,
     firstBookingDate,
     relatedPurchases,
     relatedBookings,
@@ -145,9 +147,9 @@ export const ClientDetail: React.FC<{ clientId: string }> = ({ clientId }) => {
       {/* Key Metrics Calculation Grid */}
       <div>
         <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2.5 px-1">
-          Session Balance & Usage
+          Session Balance & Payment Overview
         </h3>
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
           {/* Total Hours Purchased */}
           <div className="bg-[#151924] border border-[#242a3c] rounded-2xl p-3 sm:p-4 flex flex-col justify-between">
             <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
@@ -201,6 +203,22 @@ export const ClientDetail: React.FC<{ clientId: string }> = ({ clientId }) => {
               <p className="text-[11px] font-semibold opacity-80">Hours Remaining</p>
             </div>
           </div>
+
+          {/* Total Amount Paid Till Now (Based on Used Slots) */}
+          <div className="bg-gradient-to-br from-[#162220] to-[#131b19] border border-emerald-500/30 rounded-2xl p-3 sm:p-4 flex flex-col justify-between shadow-xs">
+            <div className="flex items-center justify-between text-xs text-emerald-400 mb-2">
+              <span className="font-bold">Paid for Used Slots</span>
+              <span className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center font-bold text-xs text-emerald-300">₹</span>
+            </div>
+            <div>
+              <p className="text-xl sm:text-2xl font-black text-emerald-400">
+                ₹{totalAmountPaid.toLocaleString('en-IN')}
+              </p>
+              <p className="text-[11px] text-emerald-500/80 font-medium">
+                {totalSlotsUsed} hrs used • {hoursRemaining} hrs unbilled
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -246,9 +264,28 @@ export const ClientDetail: React.FC<{ clientId: string }> = ({ clientId }) => {
                     <span className="text-sm font-bold text-white">
                       {purchase.hoursPurchased} Hours
                     </span>
+                    {(purchase.totalAmount || (purchase.ratePerHour && purchase.hoursPurchased)) && (
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        ₹{(purchase.totalAmount ?? (purchase.ratePerHour! * purchase.hoursPurchased)).toLocaleString('en-IN')}
+                      </span>
+                    )}
+                    {purchase.paymentStatus && (
+                      <span
+                        className={`text-[10px] font-semibold px-1.5 py-0.2 rounded ${
+                          purchase.paymentStatus === 'Paid'
+                            ? 'bg-emerald-500/15 text-emerald-400'
+                            : purchase.paymentStatus === 'Pending'
+                            ? 'bg-amber-500/15 text-amber-400'
+                            : 'bg-blue-500/15 text-blue-400'
+                        }`}
+                      >
+                        {purchase.paymentStatus}
+                      </span>
+                    )}
                   </div>
                   <p className="text-xs text-gray-400 mt-0.5">
                     Purchased on {formatDateDisplay(purchase.purchaseDate)}
+                    {purchase.ratePerHour ? ` • ₹${purchase.ratePerHour}/hr` : ''}
                   </p>
                 </div>
 

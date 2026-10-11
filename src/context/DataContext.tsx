@@ -177,6 +177,34 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const hoursRemaining = Math.max(0, totalHoursPurchased - totalSlotsUsed);
 
+    // Calculate effective rate per hour for this client across purchases
+    const purchasesWithRate = relatedPurchases.filter((p) => (p.ratePerHour && p.ratePerHour > 0) || (p.totalAmount && p.hoursPurchased));
+    const defaultClientRate = purchasesWithRate.length > 0
+      ? (purchasesWithRate[0].ratePerHour || (purchasesWithRate[0].totalAmount! / purchasesWithRate[0].hoursPurchased))
+      : 1200; // fallback standard rate
+
+    // Calculate total amount paid/due strictly based on slots that have been used (not cancelled)
+    const validBookings = relatedBookings.filter((b) => b.status !== 'Cancelled');
+    const totalSlotsUsedPaid = validBookings.reduce((acc, b) => {
+      // Find rate for this booking's specific purchase if linked, otherwise default
+      let bookingRate = defaultClientRate;
+      if (b.purchaseId) {
+        const linkedP = relatedPurchases.find((p) => p.id === b.purchaseId);
+        if (linkedP) {
+          bookingRate = linkedP.ratePerHour || (linkedP.totalAmount && linkedP.hoursPurchased ? linkedP.totalAmount / linkedP.hoursPurchased : defaultClientRate);
+        }
+      }
+      return acc + (Number(b.durationHours) || 0) * bookingRate;
+    }, 0);
+
+    // Also calculate total value of all purchased packages (for reference/pending)
+    const totalPurchasedValue = relatedPurchases.reduce((acc, p) => {
+      const amt = p.totalAmount ?? (p.ratePerHour && p.hoursPurchased ? p.ratePerHour * p.hoursPurchased : 0);
+      return acc + (Number(amt) || 0);
+    }, 0);
+
+    const totalAmountDue = Math.max(0, totalPurchasedValue - totalSlotsUsedPaid);
+
     const sortedBookings = [...relatedBookings].sort(
       (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
     );
@@ -187,6 +215,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       totalHoursPurchased,
       totalSlotsUsed,
       hoursRemaining,
+      totalSlotsUsedPaid,
+      totalAmountPaid: totalSlotsUsedPaid,
+      totalAmountDue,
       firstBookingDate,
       purchaseCount: relatedPurchases.length,
       bookingCount: relatedBookings.length,

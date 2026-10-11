@@ -96,16 +96,21 @@ export const PurchaseList: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3 text-xs text-gray-400">
+                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-gray-400">
                     <span className="font-semibold text-gray-200">
                       {purchase.hoursPurchased} Hours
                     </span>
+                    {(purchase.totalAmount || (purchase.ratePerHour && purchase.hoursPurchased)) && (
+                      <span className="font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.2 rounded border border-emerald-500/20">
+                        ₹{(purchase.totalAmount ?? (purchase.ratePerHour! * purchase.hoursPurchased)).toLocaleString('en-IN')}
+                      </span>
+                    )}
                     <span className="text-gray-500">•</span>
                     <span className="flex items-center gap-1 text-gray-400">
                       <Calendar className="w-3 h-3 text-gray-500" />
                       <span>{formatDateDisplay(purchase.purchaseDate)}</span>
                     </span>
-                    <span className="hidden sm:flex items-center gap-1 text-emerald-400 font-medium">
+                    <span className="hidden sm:flex items-center gap-1 text-amber-400 font-medium">
                       <span>({remaining} left)</span>
                     </span>
                   </div>

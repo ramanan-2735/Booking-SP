@@ -21,6 +21,8 @@ export function exportAllDataToExcel(
       'Total Hours Purchased': stats?.totalHoursPurchased ?? 0,
       'Total Slots Used': stats?.totalSlotsUsed ?? 0,
       'Hours Remaining': stats?.hoursRemaining ?? 0,
+      'Total Amount Paid (₹)': stats?.totalAmountPaid ?? 0,
+      'Amount Pending (₹)': stats?.totalAmountDue ?? 0,
       'Notes': client.notes || 'N/A',
       'Created At': client.createdAt || new Date().toISOString(),
     };
@@ -38,6 +40,8 @@ export function exportAllDataToExcel(
     { wch: 22 }, // Total Hours Purchased
     { wch: 18 }, // Total Slots Used
     { wch: 18 }, // Hours Remaining
+    { wch: 20 }, // Total Amount Paid (₹)
+    { wch: 18 }, // Amount Pending (₹)
     { wch: 30 }, // Notes
     { wch: 25 }, // Created At
   ];
